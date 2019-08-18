@@ -16,7 +16,7 @@ app.use(express.json()); //trabajar con los json
 //Routes
 app.use('/api/post',require('./routes/post.routes'));
 app.get('/hi',(req,res)=>{
-    res.send('holiwi');
+    res.send('hifi');
 });
 
 
