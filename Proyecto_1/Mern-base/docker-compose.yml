@@ -20,7 +20,7 @@ services:
     depends_on:
       - mongo-server:27017
   mongo-server:
-    container_name: mongo-forms
+    container_name: mongo-server
     image: mongo
     volumes:
       - ./data:/data/db
