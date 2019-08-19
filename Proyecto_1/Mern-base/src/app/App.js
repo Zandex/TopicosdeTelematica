@@ -162,7 +162,6 @@ class App extends Component{
         };
         this.addTask = this.addTask.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.showforums = this.showforums.bind(this);
     }
 
     addTask(e){        
@@ -273,8 +272,6 @@ class App extends Component{
     showforums(){
         
            
-        
-    }
 
     render(){
         return(
