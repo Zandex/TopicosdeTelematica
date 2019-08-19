@@ -1,7 +1,7 @@
 const mongoose =require('mongoose');
 
 //const URI ='mongodb://localhost/mern-post'
-const URI ='mongodb://mongo-db'
+const URI ='mongodb://mongo-forms'
 
 //sudo fuser -k 3000/tcp para error 
 
