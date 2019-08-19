@@ -18,7 +18,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - mongo-server:27017
+      - mongo-server
   mongo-server:
     container_name: mongo-server
     image: mongo
