@@ -16,4 +16,6 @@ RUN npm install --test
 
 EXPOSE 3000
 
-CMD npm start
+CMD sudo mongod
+CMD npm run webpack
+CMD npm run dev
