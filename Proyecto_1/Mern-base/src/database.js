@@ -1,8 +1,9 @@
 const mongoose =require('mongoose');
 
-//const URI ='mongodb://localhost/mern-post'
-const URI ='mongodb://mongo:27017/docker-node-mongo'
+const URI ='mongodb://localhost/mern-post'
+//const URI ='mongodb://mongo-server'
 
+//sudo fuser -k 3000/tcp para error 
 
 mongoose.connect(URI)
     .then(db => console.log('DB is connected'))

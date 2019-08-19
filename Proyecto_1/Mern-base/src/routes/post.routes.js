@@ -26,17 +26,17 @@ router.get('/forums/:st',async(req,res) =>{
 });
 
 router.post('/',async(req,res) =>{
-    const {username,title,description,creator}=req.body;
-    const post=new Post({username,title,description,creator
-    });
+    const {username,title,description,creator,date}=req.body;
+    const post=new Post({username,title,description,creator,
+    date});
     await post.save();
     //console.log(post);
     res.json('Tarea Guardada');
 });
 
 router.put('/:id',async(req,res)=>{
-    const {username,title,description,creator}=req.body;
-    const newPost={username,title,description,creator};
+    const {username,title,description,creator,date}=req.body;
+    const newPost={username,title,description,creator,date};
     await Post.findByIdAndUpdate(req.params.id,newPost);
     res.json({status:'Tarea editada'});
 
