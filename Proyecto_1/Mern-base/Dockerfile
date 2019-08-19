@@ -1,8 +1,8 @@
 FROM node:9.6.1
 
 LABEL version="1.0"
-LABEL description="Web app Articulos NodeJS"
-LABEL maintainer="SOC "
+LABEL description="Twiker"
+LABEL maintainer="SOC - Sortizc1@eafit.edu.co"
 
 ARG PORT=3000
 ENV PORT $PORT
