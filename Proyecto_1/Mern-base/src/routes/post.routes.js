@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const Post=require('../models/post');
+//----------------------------------------------------variable para SEGURIDAD-------------------------------
+const users=require('../models/users');
 
 router.get('/',async(req,res) =>{
     const post=await Post.find();
@@ -44,8 +46,47 @@ router.put('/:id',async(req,res)=>{
 router.delete('/:id',async(req,res)=>{
     await Post.findByIdAndRemove(req.params.id);
     res.json({status:'Tarea eliminada'});
+})
+
+// ---------------------------------------------------------------- INICIO SEGURIDAD------------------------------------------
+router.post('/users/login',async(req,res)=>{
+    try {
+        const user = req.body._id;
+        const password = req.body.password;
+        console.log("New request: body:",req.body)
+        let busqueda = await users.findOne({_id:user})
+        console.log("busqueda")
+        console.log(busqueda)
+        if (busqueda["password"] == password) {
+            console.log("usuario verificado correctamente")
+            res.json('valid')
+        } else {
+            console.log("contraseña incorrecta")
+            res.json('invalid')
+        }
+
+    } catch (err) {
+        console.log("usuario no encontrado")
+        console.log('Error: '+ err);
+        res.json('invalid')
+    }
+})
+
+router.post('/users/register',async(req,res)=>{
+    try {
+        const {_id, password}=req.body;
+        console.log("New request: body:",req.body)
+        const user=new users({_id, password});
+        let saveUser= await user.save();
+        console.log(saveUser);
+        res.json('valid');
+    } catch (err) {
+        console.log("Error: " + err)
+        res.json('invalid');
+    }
 });
 
+// ---------------------------------------------------------------- FIN SEGURIDAD------------------------------------------
 
 
 module.exports=router;
