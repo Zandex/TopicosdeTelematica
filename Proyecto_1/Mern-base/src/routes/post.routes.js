@@ -4,10 +4,11 @@ const router = express.Router();
 const Post=require('../models/post');
 //----------------------------------------------------variable para SEGURIDAD-------------------------------
 const users=require('../models/users');
+var bcrypt = require('bcrypt');
 
 router.get('/',async(req,res) =>{
     const post=await Post.find();
-    res.json(post)
+    res.json(post)  
 });
 
 router.get('/:id',async(req,res) =>{
@@ -51,20 +52,20 @@ router.delete('/:id',async(req,res)=>{
 // ---------------------------------------------------------------- INICIO SEGURIDAD------------------------------------------
 router.post('/users/login',async(req,res)=>{
     try {
-        const user = req.body._id;
-        const password = req.body.password;
-        console.log("New request: body:",req.body)
-        let busqueda = await users.findOne({_id:user})
-        console.log("busqueda")
-        console.log(busqueda)
-        if (busqueda["password"] == password) {
-            console.log("usuario verificado correctamente")
-            res.json('valid')
-        } else {
-            console.log("contraseña incorrecta")
-            res.json('invalid')
+        var hashPassword = async function(){
+            const {_id, password}= req.body;
+            let hash = await users.findOne({_id:_id})
+            await bcrypt.compare(password, hash["password"], function(err, resp) {
+                if (resp){
+                    console.log("usuario verificado correctamente")
+                    res.json('valid')
+                } else {
+                    console.log("contraseña incorrecta")
+                    res.json('invalid')
+                }
+            }); 
         }
-
+        hashPassword();
     } catch (err) {
         console.log("usuario no encontrado")
         console.log('Error: '+ err);
@@ -74,12 +75,20 @@ router.post('/users/login',async(req,res)=>{
 
 router.post('/users/register',async(req,res)=>{
     try {
-        const {_id, password}=req.body;
-        console.log("New request: body:",req.body)
-        const user=new users({_id, password});
-        let saveUser= await user.save();
-        console.log(saveUser);
-        res.json('valid');
+
+        var hashPassword = async function(){
+            await bcrypt.genSalt(8, function(err, salt) {
+                bcrypt.hash(req.body["password"], salt, function(err, hash) {
+                    req.body["password"] = hash
+                    const {_id, password}= req.body;
+                    const user=new users({_id, password});
+                    let saveUser= user.save();
+                    console.log(saveUser);
+                    res.json('valid');
+                });
+            });
+        }
+        hashPassword();
     } catch (err) {
         console.log("Error: " + err)
         res.json('invalid');

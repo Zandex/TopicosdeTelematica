@@ -4,9 +4,6 @@ import {render} from 'react-dom';
 var logedGlobal = false;
 var usernameGlobal = '';
 
-var bcrypt = require('bcrypt');
-const saltRound = 8;
-
 class Tempuso extends Component{
 
     constructor(props){
@@ -301,64 +298,59 @@ class App extends Component{
     registrarse(){
         if (this.validarRegistro()) {
             //console.log("registro correcto");
-            bcrypt.hash( this.state.passwordEntered, saltRound, function(err, hash) {
-                console.log(this.state.usernameEntered)
-                console.log(this.state.passwordEntered)
-                console.log(hash)
-                fetch('/api/post/users/register',{
-                    method:"POST",
-                    body:JSON.stringify({_id:this.state.usernameEntered,password:hash}),
-                    headers: {
-                        'Accept':'application/json',
-                        'Content-Type':'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    //console.log(data)
-                    if (String(data) == 'valid') {
-                        M.toast({html:'Usuario registrado exitosamente!'});
-                        this.setState({usernameEntered:'',passwordEntered:'',confirmEntered:'',mensaje:''})
-                    } else {
-                        M.toast({html:'Este usuario ya se encuentra registrado!'});
-                        this.setState({mensaje:'Porfavor intente con un usuario diferente!'})
-                    }
-                })
-                .catch(res => console.log("Error"));
-            });
+            console.log(this.state.usernameEntered)
+            console.log(this.state.passwordEntered)
+            fetch('/api/post/users/register',{
+                method:"POST",
+                body:JSON.stringify({_id:this.state.usernameEntered,password:this.state.passwordEntered}),
+                headers: {
+                    'Accept':'application/json',
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data)
+                if (String(data) == 'valid') {
+                    M.toast({html:'Usuario registrado exitosamente!'});
+                    this.setState({usernameEntered:'',passwordEntered:'',confirmEntered:'',mensaje:''})
+                } else {
+                    M.toast({html:'Este usuario ya se encuentra registrado!'});
+                    this.setState({mensaje:'Porfavor intente con un usuario diferente!'})
+                }
+            })
+            .catch(res => console.log("Error"));
         }
     }
 
     ingresar(){
         if (this.validarLogin()) {
-            bcrypt.hash( this.state.passwordEntered, saltRound, function(err, hash) {
-                //console.log("logueo correcto");
-                fetch('/api/post/users/login',{
-                    method:"POST",
-                    body:JSON.stringify({_id:this.state.usernameEntered,password:hash}),
-                    headers: {
-                        'Accept':'application/json',
-                        'Content-Type':'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    //console.log("data: ")
-                    //console.log(data)
-                    if (String(data) == 'valid') {
-                        M.toast({html:'Bienvenido!\n' + String(this.state.usernameEntered)});
-                        this.setState({passwordEntered:'',confirmEntered:'',mensaje:'',loged:true,loginRegisTitle:this.state.usernameEntered})
-                        this.setState({username:this.state.usernameEntered})
-                        logedGlobal = true;
-                        usernameGlobal = this.state.usernameEntered
-                        this.render();
-                    } else {
-                        M.toast({html:'Usuario o contraseña incorrecto!'});
-                        this.setState({mensaje:'Usuario o contraseña incorrecto!'})
-                    }
-                })
-                .catch(res => console.log("Error:" + res));
-            });
+            //console.log("logueo correcto");
+            fetch('/api/post/users/login',{
+                method:"POST",
+                body:JSON.stringify({_id:this.state.usernameEntered,password:this.state.passwordEntered}),
+                headers: {
+                    'Accept':'application/json',
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                //console.log("data: ")
+                //console.log(data)
+                if (String(data) == 'valid') {
+                    M.toast({html:'Bienvenido!\n' + String(this.state.usernameEntered)});
+                    this.setState({passwordEntered:'',confirmEntered:'',mensaje:'',loged:true,loginRegisTitle:this.state.usernameEntered})
+                    this.setState({username:this.state.usernameEntered})
+                    logedGlobal = true;
+                    usernameGlobal = this.state.usernameEntered
+                    this.render();
+                } else {
+                    M.toast({html:'Usuario o contraseña incorrecto!'});
+                    this.setState({mensaje:'Usuario o contraseña incorrecto!'})
+                }
+            })
+            .catch(res => console.log("Error:" + res));
         }
     }
 
