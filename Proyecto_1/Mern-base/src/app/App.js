@@ -289,8 +289,18 @@ class App extends Component{
                 this.setState({mensaje:'Las contraseñas no coinciden!'})
                 return false;
             } else {
-                this.setState({mensaje:''})
-                return true;
+                if (this.state.passwordEntered.length() < 8) {
+                    this.setState({mensaje:'La longitud de la contraseña debe ser mayor o igual a 8 caracteres!'})
+                    return false;
+                } else{
+                    if (this.state.usernameEntered.length() < 4) {
+                        this.setState({mensaje:'La longitud del usuario debe ser mayor o igual a 4 caracteres!'})
+                        return false;
+                    } else {
+                        this.setState({mensaje:''})
+                        return true;
+                    }
+                }
             }
         }
     }
